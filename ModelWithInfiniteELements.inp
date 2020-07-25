@@ -1,0 +1,911 @@
+*HEADING
+3D aluminium plate, A0 wave interaction with flat bottom hole. SI units (kg, m, s, N).
+Total dimensions: Nwidth els by Nheight els by d/Element_dim els including Nlayers concentric absorbing layers.  
+***********************************************************************************
+*Part, name=Part-1
+***********************************************************************************
+***********************************************************************************
+***********************************************************************************
+**Input parameters
+*parameter
+Nwidth=1000			# Width of the plate without infinite elements
+Nheight=1000			# Height of the plate without infinite elements
+Element_dim=0.001			# Element size (m)
+d=0.01 				# Thickness of the plate (m)
+Time_step=5e-007/6			# Sampling length of the signal (s)
+Total_time = 5e-007/6*7200 		# Total length of the signal (s)
+Time_output_step=5e-007		# Sampling length of the recorded signal (s)
+***********************************************************************************
+***********************************************************************************
+***********************************************************************************
+*parameter
+Nrows=Nheight+1
+ChangeNum1 = Nwidth*Nheight*10	
+ChangeNum2 = 2*ChangeNum1
+ChangeNum3 = 3*ChangeNum1
+ChangeNum4 = 4*ChangeNum1
+ChangeNum5 = 5*ChangeNum1
+ChangeNum6 = 6*ChangeNum1
+ChangeNum7 = 7*ChangeNum1
+ChangeNum8 = 8*ChangeNum1
+ChangeNum9 = 9*ChangeNum1
+ChangeNum10 = 10*ChangeNum1
+ChangeNum11 = 11*ChangeNum1
+FRLN = Nrows*Nwidth + 1
+LRLN = FRLN + Nrows - 1
+InfFirstNFirst = ChangeNum11 + 1
+InfFirstNLast = InfFirstNFirst + Nrows*Nwidth
+InfLastNFirst = ChangeNum11 + Nrows
+InfLastNLast = InfLastNFirst + Nrows*Nwidth
+z1=d-9*Element_dim
+z2=d-8*Element_dim
+z3=d-7*Element_dim
+z4=d-6*Element_dim
+z5=d-5*Element_dim
+z6=d-4*Element_dim
+z7=d-3*Element_dim
+z8=d-2*Element_dim
+z9=d-Element_dim
+**
+*NODE
+1,-0.5,-0.5,0
+<Nrows>,-0.5,0.5,0.0
+*NGEN,NSET=First
+1,<Nrows>,1
+**
+*NODE
+<FRLN>, 0.5, -0.5, 0.0
+<LRLN>, 0.5, 0.5, 0.0
+*NGEN,NSET=Last
+<FRLN>, <LRLN>, 1
+**
+*NFILL,NSET=metalplate
+First,Last,<Nwidth>,<Nrows>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum1>,NEW SET=metalplate_2,SHIFT
+0,0,<z1>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum2>,NEW SET=metalplate_3,SHIFT
+0,0,<z2>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum3>,NEW SET=metalplate_4,SHIFT
+0,0,<z3>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum4>,NEW SET=metalplate_5,SHIFT
+0,0,<z4>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum5>,NEW SET=metalplate_6,SHIFT
+0,0,<z5>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum6>,NEW SET=metalplate_7,SHIFT
+0,0,<z6>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum7>,NEW SET=metalplate_8,SHIFT
+0,0,<z7>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum8>,NEW SET=metalplate_9,SHIFT
+0,0,<z8>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum9>,NEW SET=metalplate_10,SHIFT
+0,0,<z9>
+*NCOPY, OLD SET=metalplate, CHANGE NUMBER=<ChangeNum10>,NEW SET=metalplate_11,SHIFT
+0,0,<d>
+*NCOPY, OLD SET=First, CHANGE NUMBER=<ChangeNum11>,NEW SET=InfLeft,POLE
+0,0,0
+*NCOPY, OLD SET=Last, CHANGE NUMBER=<ChangeNum11>,NEW SET=InfRight,POLE
+0,0,0
+*NGEN, NSET=InfBottom
+<InfFirstNFirst>,<InfFirstNLast>,<Nrows>,<Nwidth>
+*NGEN, NSET=InfTop
+<InfLastNFirst>,<InfLastNLast>,<Nrows>,<Nwidth>
+*NSET, NSET=InfNodes
+InfLeft, InfRight, InfTop, InfBottom
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum1>,NEW SET=InfNodes_2,SHIFT
+0,0,<z1>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum2>,NEW SET=InfNodes_3,SHIFT
+0,0,<z2>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum3>,NEW SET=InfNodes_4,SHIFT
+0,0,<z3>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum4>,NEW SET=InfNodes_5,SHIFT
+0,0,<z4>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum5>,NEW SET=InfNodes_6,SHIFT
+0,0,<z5>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum6>,NEW SET=InfNodes_7,SHIFT
+0,0,<z6>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum7>,NEW SET=InfNodes_8,SHIFT
+0,0,<z7>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum8>,NEW SET=InfNodes_9,SHIFT
+0,0,<z8>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum9>,NEW SET=InfNodes_10,SHIFT
+0,0,<z9>
+*NCOPY, OLD SET=InfNodes, CHANGE NUMBER=<ChangeNum10>,NEW SET=InfNodes_11,SHIFT
+0,0,<d>
+**
+***********************************************************************************
+**Definition of the elements for actual plate
+***********************************************************************************
+**Metal_plate 
+***********************************************************************************
+*parameter
+M_FESecondN=Nrows + 1
+M_FEThirdN=M_FESecondN + 1
+M_FEFifthN=ChangeNum1 + 1
+M_FESixthN=M_FEFifthN + Nrows
+M_FESeventhN=M_FESixthN + 1
+M_FEEighthN=M_FEFifthN + 1
+*ELEMENT,TYPE=C3D8
+1,1,<M_FESecondN>,<M_FEThirdN>,2,<M_FEFifthN>,<M_FESixthN>,<M_FESeventhN>,<M_FEEighthN>
+*ELGEN,ELSET=Metal_plate_part1
+1,<Nwidth>,<Nrows>,<Nheight>,<Nheight>,1,1
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part2,ELEMENT SHIFT=<ChangeNum1>,SHIFT NODES=<ChangeNum1>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part3,ELEMENT SHIFT=<ChangeNum2>,SHIFT NODES=<ChangeNum2>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part4,ELEMENT SHIFT=<ChangeNum3>,SHIFT NODES=<ChangeNum3>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part5,ELEMENT SHIFT=<ChangeNum4>,SHIFT NODES=<ChangeNum4>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part6,ELEMENT SHIFT=<ChangeNum5>,SHIFT NODES=<ChangeNum5>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part7,ELEMENT SHIFT=<ChangeNum6>,SHIFT NODES=<ChangeNum6>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part8,ELEMENT SHIFT=<ChangeNum7>,SHIFT NODES=<ChangeNum7>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part9,ELEMENT SHIFT=<ChangeNum8>,SHIFT NODES=<ChangeNum8>
+*ELCOPY,OLD SET=Metal_plate_part1,NEW SET=Metal_plate_part10,ELEMENT SHIFT=<ChangeNum9>,SHIFT NODES=<ChangeNum9>
+**
+***********************************************************************************
+**Definition of elements of infinite portion
+**********************************************************************************
+*parameter
+I_LeftElem=ChangeNum11 + 1
+I_TopElem=2*ChangeNum11 + 1
+I_BottomElem=3*ChangeNum11 + 1
+I_RightElem=4*ChangeNum11 + 1
+
+LN2=ChangeNum1+1
+LN3=LN2+1
+LN6=I_LeftElem+ChangeNum1
+LN7=LN6+1
+LN8=I_LeftElem+1
+
+TN2=Nrows+ChangeNum1
+TN3=2*Nrows+ChangeNum1
+TN4=2*Nrows
+TN5=ChangeNum11+Nrows
+TN6=TN5+ChangeNum1
+TN7=TN6+Nrows
+TN8=TN5+Nrows
+
+BN2=Nrows+1
+BN3=BN2+ChangeNum1
+BN4=1+ChangeNum1
+BN6=I_LeftElem+Nrows
+BN7=BN6+ChangeNum1
+BN8=I_LeftElem+ChangeNum1
+
+RN2=FRLN+1
+RN3=RN2+ChangeNum1
+RN4=FRLN+ChangeNum1
+RN5=FRLN+ChangeNum11
+RN6=RN5+1
+RN7=RN5+ChangeNum1+1
+RN8=FRLN+ChangeNum11+ChangeNum1
+
+*ELEMENT,TYPE=CIN3D8
+<I_LeftElem>,1,<LN2>,<LN3>,2,<I_LeftElem>,<LN6>,<LN7>,<LN8>
+<I_TopElem>,<Nrows>,<TN2>,<TN3>,<TN4>,<TN5>,<TN6>,<TN7>,<TN8>
+<I_BottomElem>,1,<BN2>,<BN3>,<BN4>,<I_LeftElem>,<BN6>,<BN7>,<BN8>
+<I_RightElem>,<FRLN>,<RN2>,<RN3>,<RN4>,<RN5>,<RN6>,<RN7>,<RN8>
+
+*ELGEN,ELSET=InfiniteLeft
+<I_LeftElem>,1,1,1,<Nwidth>,1,1,10,<ChangeNum1>,<ChangeNum1>
+*ELGEN,ELSET=InfiniteTop
+<I_TopElem>,<Nwidth>,<Nrows>,1,1,1,1,10,<ChangeNum1>,<ChangeNum1>
+*ELGEN,ELSET=InfiniteBottom
+<I_BottomElem>,<Nwidth>,<Nrows>,1,1,1,1,10,<ChangeNum1>,<ChangeNum1>
+*ELGEN,ELSET=InfiniteRight
+<I_RightElem>,1,1,1,<Nwidth>,1,1,10,<ChangeNum1>,<ChangeNum1>
+**
+***********************************************************************************
+**
+***********************************************************************************
+**Definition of hole elements, use for this Matlab file remove_elements.m
+***********************************************************************************
+*ELSET, ELSET=hole_1_layer_1, GENERATE
+  683400,  683400,1
+  684593,  684607,1
+  685790,  685810,1
+  686988,  687012,1
+  688186,  688214,1
+  689384,  689416,1
+  690583,  690617,1
+  691781,  691819,1
+  692981,  693019,1
+  694179,  694221,1
+  695379,  695421,1
+  696577,  696623,1
+  697777,  697823,1
+  698976,  699024,1
+  700175,  700225,1
+  701375,  701425,1
+  702574,  702626,1
+  703774,  703826,1
+  704973,  705027,1
+  706173,  706227,1
+  707372,  707428,1
+  708572,  708628,1
+  709772,  709828,1
+  710971,  711029,1
+  712171,  712229,1
+  713371,  713429,1
+  714571,  714629,1
+  715771,  715829,1
+  716971,  717029,1
+  718171,  718229,1
+  719370,  719430,1
+  720571,  720629,1
+  721771,  721829,1
+  722971,  723029,1
+  724171,  724229,1
+  725371,  725429,1
+  726571,  726629,1
+  727771,  727829,1
+  728971,  729029,1
+  730172,  730228,1
+  731372,  731428,1
+  732572,  732628,1
+  733773,  733827,1
+  734973,  735027,1
+  736174,  736226,1
+  737374,  737426,1
+  738575,  738625,1
+  739775,  739825,1
+  740976,  741024,1
+  742177,  742223,1
+  743377,  743423,1
+  744579,  744621,1
+  745779,  745821,1
+  746981,  747019,1
+  748181,  748219,1
+  749383,  749417,1
+  750584,  750616,1
+  751786,  751814,1
+  752988,  753012,1
+  754190,  754210,1
+*ELSET, ELSET=hole_1_layer_2, GENERATE
+10685800,10685800,1
+10686993,10687007,1
+10688191,10688209,1
+10689388,10689412,1
+10690587,10690613,1
+10691785,10691815,1
+10692984,10693016,1
+10694182,10694218,1
+10695382,10695418,1
+10696580,10696620,1
+10697780,10697820,1
+10698978,10699022,1
+10700178,10700222,1
+10701377,10701423,1
+10702576,10702624,1
+10703776,10703824,1
+10704976,10705024,1
+10706175,10706225,1
+10707374,10707426,1
+10708574,10708626,1
+10709774,10709826,1
+10710974,10711026,1
+10712173,10712227,1
+10713373,10713427,1
+10714573,10714627,1
+10715773,10715827,1
+10716973,10717027,1
+10718173,10718227,1
+10719373,10719427,1
+10720573,10720627,1
+10721773,10721827,1
+10722973,10723027,1
+10724173,10724227,1
+10725373,10725427,1
+10726573,10726627,1
+10727773,10727827,1
+10728974,10729026,1
+10730174,10730226,1
+10731374,10731426,1
+10732574,10732626,1
+10733775,10733825,1
+10734976,10735024,1
+10736176,10736224,1
+10737376,10737424,1
+10738577,10738623,1
+10739778,10739822,1
+10740978,10741022,1
+10742180,10742220,1
+10743380,10743420,1
+10744582,10744618,1
+10745782,10745818,1
+10746984,10747016,1
+10748185,10748215,1
+10749387,10749413,1
+10750588,10750612,1
+10751791,10751809,1
+*ELSET, ELSET=hole_1_layer_3, GENERATE
+20688200,20688200,1
+20689394,20689406,1
+20690591,20690609,1
+20691789,20691811,1
+20692987,20693013,1
+20694185,20694215,1
+20695384,20695416,1
+20696583,20696617,1
+20697782,20697818,1
+20698981,20699019,1
+20700180,20700220,1
+20701379,20701421,1
+20702579,20702621,1
+20703778,20703822,1
+20704978,20705022,1
+20706177,20706223,1
+20707377,20707423,1
+20708576,20708624,1
+20709776,20709824,1
+20710976,20711024,1
+20712175,20712225,1
+20713375,20713425,1
+20714575,20714625,1
+20715775,20715825,1
+20716975,20717025,1
+20718175,20718225,1
+20719374,20719426,1
+20720575,20720625,1
+20721775,20721825,1
+20722975,20723025,1
+20724175,20724225,1
+20725375,20725425,1
+20726575,20726625,1
+20727775,20727825,1
+20728976,20729024,1
+20730176,20730224,1
+20731376,20731424,1
+20732577,20732623,1
+20733777,20733823,1
+20734978,20735022,1
+20736178,20736222,1
+20737379,20737421,1
+20738579,20738621,1
+20739780,20739820,1
+20740981,20741019,1
+20742182,20742218,1
+20743383,20743417,1
+20744584,20744616,1
+20745785,20745815,1
+20746987,20747013,1
+20748189,20748211,1
+20749391,20749409,1
+*ELSET, ELSET=hole_1_layer_4, GENERATE
+30690600,30690600,1
+30691794,30691806,1
+30692992,30693008,1
+30694189,30694211,1
+30695388,30695412,1
+30696586,30696614,1
+30697785,30697815,1
+30698984,30699016,1
+30700183,30700217,1
+30701382,30701418,1
+30702581,30702619,1
+30703781,30703819,1
+30704980,30705020,1
+30706180,30706220,1
+30707379,30707421,1
+30708578,30708622,1
+30709778,30709822,1
+30710978,30711022,1
+30712177,30712223,1
+30713377,30713423,1
+30714577,30714623,1
+30715777,30715823,1
+30716977,30717023,1
+30718177,30718223,1
+30719377,30719423,1
+30720577,30720623,1
+30721777,30721823,1
+30722977,30723023,1
+30724177,30724223,1
+30725377,30725423,1
+30726577,30726623,1
+30727777,30727823,1
+30728978,30729022,1
+30730178,30730222,1
+30731378,30731422,1
+30732579,30732621,1
+30733780,30733820,1
+30734980,30735020,1
+30736181,30736219,1
+30737381,30737419,1
+30738582,30738618,1
+30739783,30739817,1
+30740984,30741016,1
+30742185,30742215,1
+30743386,30743414,1
+30744588,30744612,1
+30745789,30745811,1
+30746992,30747008,1
+*ELSET, ELSET=hole_1_layer_5, GENERATE
+40693000,40693000,1
+40694194,40694206,1
+40695392,40695408,1
+40696590,40696610,1
+40697788,40697812,1
+40698987,40699013,1
+40700186,40700214,1
+40701385,40701415,1
+40702584,40702616,1
+40703783,40703817,1
+40704982,40705018,1
+40706182,40706218,1
+40707381,40707419,1
+40708581,40708619,1
+40709780,40709820,1
+40710980,40711020,1
+40712179,40712221,1
+40713379,40713421,1
+40714579,40714621,1
+40715779,40715821,1
+40716979,40717021,1
+40718179,40718221,1
+40719378,40719422,1
+40720579,40720621,1
+40721779,40721821,1
+40722979,40723021,1
+40724179,40724221,1
+40725379,40725421,1
+40726579,40726621,1
+40727779,40727821,1
+40728980,40729020,1
+40730180,40730220,1
+40731381,40731419,1
+40732581,40732619,1
+40733782,40733818,1
+40734982,40735018,1
+40736183,40736217,1
+40737384,40737416,1
+40738585,40738615,1
+40739786,40739814,1
+40740987,40741013,1
+40742188,40742212,1
+40743390,40743410,1
+40744592,40744608,1
+*ELSET, ELSET=hole_2_layer_1, GENERATE
+  585000,  585000,1
+  586196,  586204,1
+  587394,  587406,1
+  588593,  588607,1
+  589792,  589808,1
+  590991,  591009,1
+  592190,  592210,1
+  593390,  593410,1
+  594589,  594611,1
+  595789,  595811,1
+  596989,  597011,1
+  598189,  598211,1
+  599389,  599411,1
+  600589,  600611,1
+  601789,  601811,1
+  602989,  603011,1
+  604189,  604211,1
+  605389,  605411,1
+  606590,  606610,1
+  607790,  607810,1
+  608991,  609009,1
+  610192,  610208,1
+  611393,  611407,1
+  612594,  612606,1
+*ELSET, ELSET=hole_2_layer_2, GENERATE
+10587400,10587400,1
+10588597,10588603,1
+10589795,10589805,1
+10590994,10591006,1
+10592193,10592207,1
+10593392,10593408,1
+10594592,10594608,1
+10595791,10595809,1
+10596991,10597009,1
+10598191,10598209,1
+10599390,10599410,1
+10600591,10600609,1
+10601791,10601809,1
+10602991,10603009,1
+10604191,10604209,1
+10605392,10605408,1
+10606592,10606608,1
+10607793,10607807,1
+10608994,10609006,1
+10610195,10610205,1
+*ELSET, ELSET=hole_2_layer_3, GENERATE
+20589800,20589800,1
+20590997,20591003,1
+20592195,20592205,1
+20593395,20593405,1
+20594594,20594606,1
+20595793,20595807,1
+20596993,20597007,1
+20598193,20598207,1
+20599393,20599407,1
+20600593,20600607,1
+20601793,20601807,1
+20602993,20603007,1
+20604193,20604207,1
+20605394,20605406,1
+20606595,20606605,1
+20607795,20607805,1
+*ELSET, ELSET=hole_3_layer_1, GENERATE
+  694100,  694100,1
+  695294,  695306,1
+  696492,  696508,1
+  697690,  697710,1
+  698888,  698912,1
+  700087,  700113,1
+  701286,  701314,1
+  702485,  702515,1
+  703684,  703716,1
+  704883,  704917,1
+  706083,  706117,1
+  707282,  707318,1
+  708482,  708518,1
+  709681,  709719,1
+  710881,  710919,1
+  712080,  712120,1
+  713280,  713320,1
+  714480,  714520,1
+  715680,  715720,1
+  716880,  716920,1
+  718080,  718120,1
+  719279,  719321,1
+  720480,  720520,1
+  721680,  721720,1
+  722880,  722920,1
+  724080,  724120,1
+  725280,  725320,1
+  726480,  726520,1
+  727680,  727720,1
+  728881,  728919,1
+  730081,  730119,1
+  731282,  731318,1
+  732482,  732518,1
+  733683,  733717,1
+  734883,  734917,1
+  736084,  736116,1
+  737285,  737315,1
+  738486,  738514,1
+  739687,  739713,1
+  740888,  740912,1
+  742090,  742110,1
+  743292,  743308,1
+*ELSET, ELSET=hole_3_layer_2, GENERATE
+10696500,10696500,1
+10697695,10697705,1
+10698892,10698908,1
+10700091,10700109,1
+10701289,10701311,1
+10702488,10702512,1
+10703687,10703713,1
+10704886,10704914,1
+10706085,10706115,1
+10707284,10707316,1
+10708484,10708516,1
+10709683,10709717,1
+10710883,10710917,1
+10712083,10712117,1
+10713282,10713318,1
+10714482,10714518,1
+10715682,10715718,1
+10716882,10716918,1
+10718082,10718118,1
+10719282,10719318,1
+10720482,10720518,1
+10721682,10721718,1
+10722882,10722918,1
+10724082,10724118,1
+10725282,10725318,1
+10726482,10726518,1
+10727683,10727717,1
+10728883,10728917,1
+10730083,10730117,1
+10731284,10731316,1
+10732484,10732516,1
+10733685,10733715,1
+10734886,10734914,1
+10736087,10736113,1
+10737288,10737312,1
+10738489,10738511,1
+10739691,10739709,1
+10740892,10740908,1
+*ELSET, ELSET=hole_3_layer_3, GENERATE
+20698900,20698900,1
+20700095,20700105,1
+20701293,20701307,1
+20702491,20702509,1
+20703690,20703710,1
+20704889,20704911,1
+20706088,20706112,1
+20707287,20707313,1
+20708486,20708514,1
+20709686,20709714,1
+20710885,20710915,1
+20712085,20712115,1
+20713284,20713316,1
+20714484,20714516,1
+20715684,20715716,1
+20716884,20716916,1
+20718084,20718116,1
+20719283,20719317,1
+20720484,20720516,1
+20721684,20721716,1
+20722884,20722916,1
+20724084,20724116,1
+20725284,20725316,1
+20726484,20726516,1
+20727685,20727715,1
+20728885,20728915,1
+20730086,20730114,1
+20731286,20731314,1
+20732487,20732513,1
+20733688,20733712,1
+20734889,20734911,1
+20736090,20736110,1
+20737291,20737309,1
+20738493,20738507,1
+*ELSET, ELSET=hole_3_layer_4, GENERATE
+30701300,30701300,1
+30702496,30702504,1
+30703693,30703707,1
+30704892,30704908,1
+30706090,30706110,1
+30707290,30707310,1
+30708489,30708511,1
+30709688,30709712,1
+30710888,30710912,1
+30712087,30712113,1
+30713287,30713313,1
+30714486,30714514,1
+30715686,30715714,1
+30716886,30716914,1
+30718086,30718114,1
+30719286,30719314,1
+30720486,30720514,1
+30721686,30721714,1
+30722886,30722914,1
+30724086,30724114,1
+30725286,30725314,1
+30726487,30726513,1
+30727687,30727713,1
+30728888,30728912,1
+30730088,30730112,1
+30731289,30731311,1
+30732490,30732510,1
+30733690,30733710,1
+30734892,30734908,1
+30736093,30736107,1
+***********************************************************************************
+*End Part
+***********************************************************************************
+** ASSEMBLY
+***********************************************************************************
+*Assembly, name=Assembly
+***********************************************************************************    
+*Instance, name=Part-1-1, part=Part-1
+***********************************************************************************
+***********************************************************************************
+**Material of absorbing boundary layers, use for this Matlab file
+**absorber_fd_alpha_04.m and absorber_fd_alpha_multiple.m
+***********************************************************************************
+*Solid Section, elset=Metal_plate_part1, material=Metal
+*Solid Section, elset=Metal_plate_part2, material=Metal
+*Solid Section, elset=Metal_plate_part3, material=Metal
+*Solid Section, elset=Metal_plate_part4, material=Metal
+*Solid Section, elset=Metal_plate_part5, material=Metal
+*Solid Section, elset=Metal_plate_part6, material=Metal
+*Solid Section, elset=Metal_plate_part7, material=Metal
+*Solid Section, elset=Metal_plate_part8, material=Metal
+*Solid Section, elset=Metal_plate_part9, material=Metal
+*Solid Section, elset=Metal_plate_part10, material=Metal
+*Solid Section, elset=hole_1_layer_1, material=Air
+*Solid Section, elset=hole_1_layer_2, material=Air
+*Solid Section, elset=hole_1_layer_3, material=Air
+*Solid Section, elset=hole_1_layer_4, material=Air
+*Solid Section, elset=hole_1_layer_5, material=Air
+*Solid Section, elset=hole_2_layer_1, material=Air
+*Solid Section, elset=hole_2_layer_2, material=Air
+*Solid Section, elset=hole_2_layer_3, material=Air
+*Solid Section, elset=hole_3_layer_1, material=Air
+*Solid Section, elset=hole_3_layer_2, material=Air
+*Solid Section, elset=hole_3_layer_3, material=Air
+*Solid Section, elset=hole_3_layer_4, material=Air
+*Solid Section, elset=InfiniteLeft, material=InfMetal
+*Solid Section, elset=InfiniteRight, material=InfMetal
+*Solid Section, elset=InfiniteTop, material=InfMetal
+*Solid Section, elset=InfiniteBottom, material=InfMetal
+***********************************************************************************
+*End Instance
+***********************************************************************************
+***********************************************************************************
+**Source/receiver definition
+***********************************************************************************
+*parameter
+Source=1
+Rec1=130533
+Rec2=130140
+Rec3=129345
+Rec4=128149
+Rec5=126952
+Rec6=125355
+Rec7=123757
+Rec8=121757
+Rec9=119757
+Rec10=117355
+Rec11=114552
+Rec12=112149
+Rec13=109345
+Rec14=106540
+Rec15=103333
+Rec16=100526
+Rec17=97719
+Rec18=94510
+Rec19=91701
+Rec20=88891
+Rec21=86482
+Rec22=83671
+Rec23=81261
+Rec24=79251
+Rec25=77241
+Rec26=75631
+Rec27=74020
+Rec28=72811
+Rec29=71601
+Rec30=70792
+Rec31=70383
+Rec32=70376
+Rec33=70369
+Rec34=70762
+Rec35=71557
+Rec36=72753
+Rec37=73950
+Rec38=75547
+Rec39=77145
+Rec40=79145
+Rec41=81145
+Rec42=83547
+Rec43=86350
+Rec44=88753
+Rec45=91557
+Rec46=94362
+Rec47=97569
+Rec48=100376
+Rec49=103183
+Rec50=106392
+Rec51=109201
+Rec52=112011
+Rec53=114420
+Rec54=117231
+Rec55=119641
+Rec56=121651
+Rec57=123661
+Rec58=125271
+Rec59=126882
+Rec60=128091
+Rec61=129301
+Rec62=130110
+Rec63=130519
+***********************************************************************************
+*NSET,NSET=Generator_1,instance=Part-1-1
+<Source>
+*NSET,NSET=Monitor_1,instance=Part-1-1
+<Source>
+<Rec1>
+<Rec2>
+<Rec3>
+<Rec4>
+<Rec5>
+<Rec6>
+<Rec7>
+<Rec8>
+<Rec9>
+<Rec10>
+<Rec11>
+<Rec12>
+<Rec13>
+<Rec14>
+<Rec15>
+<Rec16>
+<Rec17>
+<Rec18>
+<Rec19>
+<Rec20>
+<Rec21>
+<Rec22>
+<Rec23>
+<Rec24>
+<Rec25>
+<Rec26>
+<Rec27>
+<Rec28>
+<Rec29>
+<Rec30>
+<Rec31>
+<Rec32>
+<Rec33>
+<Rec34>
+<Rec35>
+<Rec36>
+<Rec37>
+<Rec38>
+<Rec39>
+<Rec40>
+<Rec41>
+<Rec42>
+<Rec43>
+<Rec44>
+<Rec45>
+<Rec46>
+<Rec47>
+<Rec48>
+<Rec49>
+<Rec50>
+<Rec51>
+<Rec52>
+<Rec53>
+<Rec54>
+<Rec55>
+<Rec56>
+<Rec57>
+<Rec58>
+<Rec59>
+<Rec60>
+<Rec61>
+<Rec62>
+<Rec63>
+***********************************************************************************
+*End Assembly
+***********************************************************************************
+***********************************************************************************
+**Properties definiton
+***********************************************************************************
+**
+*MATERIAL,NAME=Metal
+*ELASTIC, TYPE=isotropic
+0.700000e+011,0.33
+*DENSITY
+2700
+*MATERIAL,NAME=Air
+*ELASTIC, TYPE=isotropic
+0.100000e+06,0.33
+*DENSITY
+.1
+*MATERIAL,NAME=InfMetal
+*ELASTIC, TYPE=isotropic
+0.100000e+06,0.33
+*DENSITY
+2700
+**
+***********************************************************************************
+**Amplitude definition
+***********************************************************************************
+**
+*AMPLITUDE,TIME=TOTAL TIME,NAME=A0,INPUT=TB_5cycl_50kHz.dat,DEFINITION=TABULAR  
+**                                                                                               
+***********************************************************************************
+**Step definition
+*********************************************************************************** 
+*Step, name=ApplyDispBC, nlgeom=NO
+displacement boundary condition 
+*Dynamic, Explicit,direct user control
+<Time_step>,<Total_time>
+*Bulk Viscosity
+0., 0.
+***********************************************************************************
+**Load
+***********************************************************************************
+** Name: a0apply1 Type: Displacement/Rotation
+**                                 
+*Cload, amplitude=A0
+Generator_1,3,0                    
+**                                    
+**                                             
+** OUTPUT REQUESTS
+** 
+*Restart, write, number interval=1, time marks=NO
+** 
+** HISTORY OUTPUT: H-Output-1
+** 
+*Output, history, time interval=<Time_output_step>
+*Node Output, nset=Monitor_1
+U3
+**
+*End Step         
+
